@@ -1,0 +1,1222 @@
+<!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+{% extends "main.html" %}
+
+<!-- Render hero under tabs -->
+{% block tabs %} {{ super() }}
+
+<!-- Hero for landing page -->
+<section class="mdx-container">
+  <div
+    data-md-component="announce"
+    style="
+      justify-content: center !important;
+      margin-left: 0rem !important;
+      font-size: 12;
+    "
+  >
+    <div class="md-banner__inner md-grid md-typeset">
+      <div
+        style="
+          display: left;
+          justify-content: flex-start;
+          align-items: left;
+          color: white;
+          background-color: #e53935;
+          padding: 0.5rem 0.5rem;
+        "
+      >
+        <a
+          href="{{ 'About/Fraud-Alert/' | url }}"
+          style="color: white; text-decoration: underline; white-space: nowrap"
+          target="_blank" rel="noopener"
+          ><strong>A quick and important note on security.&nbsp;</strong></a
+        >
+        <button
+          class="md-banner__button md-icon"
+          aria-label="Dismiss announcement"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="md-grid md-typeset">
+    <div class="mdx-hero">
+      <!-- Hero content -->
+      <div class="mdx-hero__content">
+        <h1>Advancing Research and Development for Whole Brain Emulation</h1>
+        <p>
+          The Carboncopies Foundation leads research and development toward
+          whole brain emulation - a technology to preserve and restore brain
+          function.
+        </p>
+
+        <div class="action-buttons">
+          <a href="{{ 'Join' | url }}" class="md-button md-button--primary" target="_blank" rel="noopener">
+            Join Us
+          </a>
+          <a href="{{ 'Donate' | url }}" class="md-button" target="_blank" rel="noopener"> Donate </a>
+        </div>
+        
+        <div class="news-section">
+          <h2>Latest News & Events</h2>
+          <!-- <div class="news-item">
+              <h3>Summer Internships Are Here!</h3>
+              <p>
+                The Carboncopies Foundation has a number of openings for Internships for the Summer of 2025.
+                Interested? Check out the openings on our <a href="{{ 'Internships' | url }}" target="_blank" rel="noopener" style="color: #9bb8d2;">Internships page →</a>
+              </p>
+            </div> -->
+          <div class="news-item">
+            <h3>Consciousness and Psychedelics</h3>
+            <p>
+              For this session of our Consciousness and Subjective Awareness journal club, we're stepping away from our usual neurophilosophy and into some decidedly stranger territory.
+              Join us at 5 pm PDT on May 17, 2026, <a href="{{ 'Events/JournalClubs/ConsciousnessAndSubjectiveExperience/2026-05-17' | url }}" target="_blank" rel="noopener" style="color: #9bb8d2;">see more →</a>.
+            </p>
+          </div>
+          <div class="news-item">
+            <h3>No, a Fruit Fly has not been uploaded</h3>
+            <p>
+              About the risk of "Science by Press Release" in the brain emulation community,
+              and a need to set standards, identify success criteria to validate brain emulation.
+              Our response to recent viral posts about an <a href="{{ 'Blog/Posts/FruitFlyNotUploaded/Post' | url }}" target="_blank" rel="noopener" style="color: #9bb8d2;">uploaded fruit fly →</a>.
+            </p>
+          </div>
+          <div class="news-item">
+            <h3>Carboncopies Connect - Dec 2025 Newsletter!</h3>
+            <p>
+              Our December 2025 Newsletter is here! Find out what we've been up to
+              and recent progress on WBE by checking out <a href="{{ 'Newsletter/December2025' | url }}" target="_blank" rel="noopener" style="color: #9bb8d2;">Carboncopies Connect →</a>
+            </p>
+          </div>
+          <div class="news-item">
+            <h3>Memory Decoding Journal Club</h3>
+            <p>
+              <a
+                href="{{ 'Events/JournalClubs/MemoryDecoding/2025-08-12' | url }}"
+                style="color: #9bb8d2"
+                target="_blank" rel="noopener"
+                >Join us</a
+              >
+              for a discussion on <i>"The dendritic engram"</i> presented by Dr.
+              Randal Koene on August 12, 2025. In collaboration with
+              Aspirational Neuroscience.
+              <br />
+              Missed the last session? Watch
+              <a
+                href="https://youtu.be/DinPC_MR4fc?si=-o4wzDxycpmLM46W"
+                target="_blank"
+                style="color: #9bb8d2"
+                target="_blank" rel="noopener"
+                >here</a
+              >.
+            </p>
+            <a
+              href="https://aspirationalneuroscience.org/register-with-us/"
+              class="emphasized-link"
+              style="color: #c5d9ed"
+              target="_blank" rel="noopener"
+              >Register for updates Here →</a
+            >
+          </div>
+          <div class="news-item">
+            <h3>Brain Emulation Challenge</h3>
+            <p>
+              Our latest online workshop entitled
+              <b>Brain Emulation Challenge</b>: Functionalizing Brain Data,
+              Ground-Truthing, and the Role of Artificial Data in Advancing
+              Neuroscience released February 22, 2025.
+            </p>
+            <a
+              href="{{ 'https://www.youtube.com/watch?v=5e9Ynccipzs&list=PLxA55oVVnSGRhD_lplYkF4bG_Lxd2p2C0' | url }}"
+              class="emphasized-link"
+              style="color: #c5d9ed"
+              target="_blank" rel="noopener"
+              >Watch now →</a
+            >
+          </div>
+          <div class="news-item">
+            <h3>Due Diligence Services Offered</h3>
+            <p>
+              We now offer in-depth due diligence services for investors,
+              grantors, press on startups, research claims and proposals
+              involving the intricacies of brain interfaces, brain emulation and
+              related topics.
+            </p>
+            <a
+              href="{{ 'About/DueDiligence' | url }}"
+              class="emphasized-link"
+              style="color: #c5d9ed"
+              target="_blank" rel="noopener"
+              >See here →</a
+            >
+          </div>
+          <div class="news-item">
+            <h3>New Research: Neuroscience of Memory Survey</h3>
+            <p>
+              Explore the latest preprint on the neuroscience of memory,
+              providing comprehensive insights into memory formation and
+              retention mechanisms.
+            </p>
+            <a
+              href="{{ 'assets/pdfs/neuroscience_of_memory_survey_preprint.pdf' | url }}"
+              class="emphasized-link"
+              style="color: #c5d9ed"
+              target="_blank" rel="noopener"
+              >Read the Paper →</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero image -->
+      <div class="mdx-hero__image">
+        <!-- <iframe 
+            width="768" 
+            height="512" 
+            src="https://videos.carboncopies.org/embed?m=QugYndNjR" 
+            frameborder="0" 
+            allowfullscreen>
+          </iframe> -->
+        <br></br>
+        <!-- <iframe width="560" height="315" src="https://videos.carboncopies.org/embed?m=i5rsSKJ5B" frameborder="0" allowfullscreen></iframe> -->
+        <!--<iframe width="560" height="315" src="https://www.youtube.com/embed/nShfJowRrno?si=9JGQZNgOo2rW3Yfl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
+        <!-- <a href="{{ 'Events/JournalClubs/MemoryDecoding/2025-07-15' | url }}" target="_blank" rel="noopener" style="display: inline-block; padding: 15px 30px; background-color: #2e279d; color: white; text-decoration: none; font-weight: bold; border-radius: 4px; font-size: 18px; transition: all 0.3s ease; box-shadow: 0 0 0 rgba(46, 39, 157, 0);" onmouseover="this.style.backgroundColor='#3a33c2'; this.style.boxShadow='0 0 20px rgba(46, 39, 157, 0.7)';" onmouseout="this.style.backgroundColor='#2e279d'; this.style.boxShadow='0 0 0 rgba(46, 39, 157, 0)';">
+            <img src="/Events/Assets/MDJC11-July15.png" alt="2025-07-15 MD JC" />  
+          </a>-->
+        <a href="{{ 'Events/JournalClubs/ConsciousnessAndSubjectiveExperience/2026-05-17' | url }}"><img src="{{ 'Events/Assets/consciousness-and-psychedelics-cover.jpg' | url }}"></a>
+        <div class="foundation-activities">
+          <h2>Our Impact</h2>
+            <div class="content-cards">
+              <div class="card">
+                <h3>Research</h3>
+                <ul>
+                  <li>WBE Roadmap Development</li>
+                  <li>Brain Emulation Challenge</li>
+                  <li>Ethics Framework</li>
+                </ul>
+                <a
+                  href="{{ 'Research' | url }}"
+                  class="emphasized-link"
+                  style="color: #c5d9ed"
+                  target="_blank" rel="noopener"
+                  >View Research →</a
+                >
+              </div>
+
+              <div class="card">
+                <h3>Education</h3>
+                <ul>
+                  <li>Technical Workshops</li>
+                  <li>Public Lectures</li>
+                  <li>Learning Resources</li>
+                </ul>
+                <a
+                  href="{{ 'Resources/Learn' | url }}"
+                  class="emphasized-link"
+                  style="color: #c5d9ed"
+                  target="_blank" rel="noopener"
+                  >Learn More →</a
+                >
+              </div>
+
+              <div class="card">
+                <h3>Community</h3>
+                <ul>
+                  <li>Discussion Groups</li>
+                  <li>Volunteer Opportunities</li>
+                  <li>Collaboration Network</li>
+                </ul>
+                <a
+                  href="{{ 'Join' | url }}"
+                  class="emphasized-link"
+                  style="color: #c5d9ed"
+                  target="_blank" rel="noopener"
+                  >Get Involved →</a
+                >
+              </div>
+            </div>
+        </div>
+
+        <div class="additional-links">
+          <p>
+            <a
+              href="https://braingenix.org"
+              title="BrainGenix"
+              class="emphasized-link"
+              style="color: #c5d9ed"
+              target="_blank" rel="noopener"
+            >
+              Visit BrainGenix.org for ongoing WBE research and development →
+            </a>
+          </p>
+
+          <p>
+            <a
+              href="https://sites.google.com/carboncopies.org/ethics"
+              title="WBE Ethics"
+              class="emphasized-link"
+              style="color: #c5d9ed"
+              target="_blank" rel="noopener"
+            >
+              Join our Panel Events on Ethics in Whole-Brain Emulation →
+            </a>
+          </p>
+
+          <p>
+            <a
+              href="https://carboncopies-store.myspreadshop.com/"
+              title="CCF Store"
+              class="emphasized-link"
+              style="color: #c5d9ed"
+              target="_blank" rel="noopener"
+            >
+              Visit the Carboncopies Store →
+            </a>
+          </p>
+          
+          <!-- Zotero Featured Section -->
+          <div class="zotero-featured" style="margin: 2rem 0; padding: 1.5rem; background: linear-gradient(135deg, #e8f4f8 0%, #d1e7dd 100%); border-radius: 8px; display: flex; align-items: center; gap: 1.5rem;">
+            <div style="flex-shrink: 0;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" style="fill: #DB2C3A;">
+                <path d="M21.231 2.462 7.18 20.923h14.564V24H2.256v-2.462L16.308 3.076H2.975V0h18.256v2.462z"/>
+              </svg>
+            </div>
+            <div>
+              <h2 style="margin: 0 0 0.5rem 0; color: #2e7d32; font-size: 1.5rem;">Recommended Readings</h2>
+              <p style="margin: 0; color: #555;">Curated collection of books and research papers on Zotero</p>
+            </div>
+            <div style="flex-shrink: 0; margin-left: auto;">
+              <a href="https://www.zotero.org/groups/5667770/carboncopies_foundation_research/collections/BNAFBJW6/collection" 
+                 class="md-button md-button--primary" 
+                 target="_blank" rel="noopener"
+                 style="background: #2e279d; border-color: #2e279d; color: white;"
+                 onmouseover="this.style.background='#4539b8'; this.style.borderColor='#4539b8'"
+                 onmouseout="this.style.background='#2e279d'; this.style.borderColor='#2e279d'">
+                Browse Collection
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="internal-link"
+          style="margin-top: 3rem; font-size: 0.9em"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Social Media Links -->
+  <!-- <div class="social-links" id="socialLinks">
+      <button class="close-button" onclick="toggleSocialLinks()" aria-label="Toggle social links">×</button>
+      <div class="social-icons"> -->
+  <!-- Add your social media links here -->
+  <!-- <a href="https://youtube.com/@CarboncopiesOrg" target="_blank" rel="noopener" rel="noopener">YouTube</a> -->
+  <!-- <a href="https://twitter.com/CarbonCopies" target="_blank" rel="noopener" rel="noopener">Twitter</a> -->
+  <!-- Add other social media links -->
+  <!-- </div> -->
+  <!-- </div> -->
+
+  <!-- Chatbot integration -->
+  <!-- <script type="module">
+      import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+      Chatbot.init({
+          chatflowid: "c6080984-ab3a-489e-8a5d-9ad18e5310f6",
+          apiHost: "https://carboncopies.onrender.com",
+      })
+    </script> -->
+
+  <!-- Social Links Toggle Script -->
+  <script>
+    function toggleSocialLinks() {
+      const socialLinks = document.getElementById("socialLinks");
+      if (socialLinks.classList.contains("hidden")) {
+        socialLinks.classList.remove("hidden");
+        localStorage.removeItem("socialLinksHidden");
+      } else {
+        socialLinks.classList.add("hidden");
+        localStorage.setItem("socialLinksHidden", "true");
+      }
+    }
+
+    // Check localStorage on page load
+    document.addEventListener("DOMContentLoaded", () => {
+      const socialLinks = document.getElementById("socialLinks");
+      if (localStorage.getItem("socialLinksHidden")) {
+        socialLinks.classList.add("hidden");
+      }
+    });
+  </script>
+
+  <div class="md-grid md-typeset">
+    <div class="slideshow-container">
+      <div class="slides">
+        <div class="slide">
+          <img
+            src="{{ 'assets/images/impact-slide-1.png' | url }}"
+            alt="Carboncopies Foundation Impact Statement: Advancing Whole Brain Emulation & Computational Neuroscience"
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="{{ 'assets/images/impact-slide-2.png' | url }}"
+            alt="Impact at a Glance: 25+ Workshops Conducted, 12+ Collaborations Established, 10+ Publications Released, 150+ Volunteers Engaged. 'Together, we are working tirelessly to advance whole brain emulation, opening doors to transformative breakthroughs in brain health and more.' – Dr. Randal Koene , Founder , CCF"
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="{{ 'assets/images/impact-slide-3.png' | url }}"
+            alt="Resource Allocation Overview: Finances support operations, education, and research. Our team’s effort spans daily contributors, interns, and focused collaborators. Together, they power Carboncopies’ mission."
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="{{ 'assets/images/impact-slide-4.png' | url }}"
+            alt="The Sun Never Sets on the Carboncopies Foundation. Contributors from 5 Continents, Advancing the Mission Around the Clock. Our global community includes: (Computational) Neuroscientists, Programmers, ML / AI, Philosophers (philosophy of mind), Writers, Web developers, Event organizers, Ph.D. Candidates, Interns, Students at every level."
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="{{ 'assets/images/impact-slide-5.png' | url }}"
+            alt="Success Stories & Testimonials: 'Carboncopies was the only organization I came across that approached reverse engineering the brain from first principles of complex, near-critical systems. Their scientific rigor uncovered key problem areas to WBE which in turn guided my career decisions through the neurotech sector.' - Samuel Hosovsky, Entrepreneur and CCF Workshop Attendee. 'I was actively involved with the Carboncopies Foundation, with a particular interest in the ethical challenges posed by future technologies, and also served on the Board for a time. [CCF is] a well-informed, passionate group of individuals dedicated to ensuring that whole brain emulation and related technologies are developed ethically and for the benefit of humanity.' - Angela Thorton, Ph.D., dissertation in partnership with CCF & Horizon, Univ. of Nottingham"
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="{{ 'assets/images/impact-slide-6.png' | url }}"
+            alt="Future Goals and Plans: As we continue to grow, our commitment to advancing the community and driving innovation remains stronger than ever. In the coming year, we aim to: Launch & publish our groundbreaking BrainGenix “Brain Emulation Challenge” research platform. Expand our journal clubs and global events to foster deeper knowledge-sharing and collaboration. Launch an open-access Brain Emulation Knowledge Hub to make cutting-edge insights accessible to everyone. Strengthen collaborations with leading research institutions and industry pioneers. Identify and promote more funding opportunities to empower the community and accelerate breakthroughs."
+          />
+        </div>
+      </div>
+      <div class="slide-controls">
+        <button class="prev">&lsaquo;</button>
+        <button class="next">&rsaquo;</button>
+      </div>
+      <div class="slide-dots"></div>
+    </div>
+  </div>
+
+<script>
+  const slides = document.querySelector(".slides");
+  const slide = document.querySelectorAll(".slide");
+  const prevBtn = document.querySelector(".prev");
+  const nextBtn = document.querySelector(".next");
+  const dotsContainer = document.querySelector(".slide-dots");
+
+  let currentIndex = 0;
+  let intervalId;
+  let dots;
+
+  function showSlide(index) {
+    slides.style.transform = `translateX(${-index * 100}%)`;
+    updateDots(index);
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % slide.length;
+    showSlide(currentIndex);
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + slide.length) % slide.length;
+    showSlide(currentIndex);
+  }
+
+  function createDots() {
+    const fragment = document.createDocumentFragment();
+    slide.forEach((_, i) => {
+      const dot = document.createElement("span");
+      dot.classList.add("dot");
+      dot.dataset.index = i;
+      fragment.appendChild(dot);
+    });
+    dotsContainer.appendChild(fragment);
+    dots = dotsContainer.children;
+  }
+
+  function updateDots(index) {
+    for (let i = 0; i < dots.length; i++) {
+      dots[i].classList[i === index ? "add" : "remove"]("active");
+    }
+  }
+
+  function startSlideshow() {
+    intervalId = setInterval(nextSlide, 5000);
+  }
+
+  function resetInterval() {
+    clearInterval(intervalId);
+    startSlideshow();
+  }
+
+  dotsContainer.addEventListener("click", (e) => {
+    if (e.target.classList.contains("dot")) {
+      const index = +e.target.dataset.index;
+      showSlide(index);
+      currentIndex = index;
+      resetInterval();
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    nextSlide();
+    resetInterval();
+  });
+
+  prevBtn.addEventListener("click", () => {
+    prevSlide();
+    resetInterval();
+  });
+
+  createDots();
+  showSlide(currentIndex);
+  startSlideshow();
+</script>
+
+<section class="mdx-container">
+  <div class="md-grid md-typeset">
+<div class="compliance-container">
+    <section class="compliance-section">
+        <div class="compliance-section">
+            <h2>What is whole brain emulation?</h2>
+             <p>Whole brain is a technological protocol that may someday be able to reverse-engineer a biological brain in order to functionally emulate its neurobiological processes on a different substrate (or "platform"). Emulation will be done in a way that will generate the cognitive experience that was achieved by the original brain.</p>
+        </div>
+    </section>
+
+    <section class="compliance-section">
+        <h2>Our Vision and Mission</h2>
+        <p><strong>Our Vision:</strong> An expedited future where whole brain emulation benefits humanity and individuals.</p>
+        <p><strong>Our Mission:</strong> To identify, facilitate, and conduct the research which will deliver whole brain emulation.</p>
+        <p>The Carboncopies Foundation is guided by a steadfast vision of an expedited future where whole brain emulation benefits humanity and individuals. We believe that the possibilities and opportunities presented by the science and technology of whole brain emulation are essential components for the most promising routes to overcoming our greatest challenges and fundamental limitations as a culture, as a society, and as individuals.</p>
+    </section>
+
+    <section class="compliance-section">
+        <h2>Our Impact in Numbers</h2>
+        <div class="impact-metrics">
+            <div class="metric-card">
+                <h3>Collaborations Established</h3>
+                <p class="metric">12+</p>
+                <p>We have partnered with leading universities, research institutions, and technology companies to advance the science of whole-brain emulation.</p>
+            </div>
+            <div class="metric-card">
+                <h3>Workshops Conducted</h3>
+                <p class="metric">25+</p>
+                <p>We have hosted workshops and seminars around the world to educate the public and inspire the next generation of scientists and engineers.</p>
+            </div>
+            <div class="metric-card">
+                <h3>Publications Released</h3>
+                <p class="metric">10+</p>
+                <p>Our researchers have published papers in peer-reviewed journals, sharing our findings with the global scientific community.</p>
+            </div>
+            <div class="metric-card">
+                <h3>Volunteers Engaged</h3>
+                <p class="metric">150+</p>
+                <p>Our global community includes scientists, programmers, writers, event organizers, students, and more, from 5 continents.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="compliance-section">
+        <h2>Your Donation in Action</h2>
+        <p>Your donation is an investment in the future of humanity. It allows us to continue our groundbreaking research, develop new technologies, and build a global community of support for the science of whole brain emulation. With your help, we can unlock the secrets of the human brain and create a world where consciousness is no longer bound by biology.</p>
+        <p>Finances support our three pillars of activity: research, education, and operations. Your contribution powers Carboncopies’ mission to make whole brain emulation a reality.</p>
+        <a href="{{ 'Donate/' | url }}" class="cta-button" target="_blank" rel="noopener">Donate Here</a>
+    </section>
+
+    <section class="compliance-section">
+        <h2>Success Stories & Testimonials</h2>
+        <div class="testimonials">
+            <div class="testimonial-card">
+                <p>"Carboncopies was the only organization I came across that approached reverse engineering the brain from first principles of complex, near-critical systems. Their scientific rigor uncovered key problem areas to WBE which in turn guided my career decisions through the neurotech sector."</p>
+                <p class="testimonial-author">- Samuel Hosovsky, <a href="https://www.ucat.app/" target="_blank" rel="noopener">Founder of uCat</a> and CCF Workshop Attendee</p>
+            </div>
+            <div class="testimonial-card">
+                <p>"I was actively involved with the Carboncopies Foundation, with a particular interest in the ethical challenges posed by future technologies, and also served on the Board for a time. [CCF is] a well-informed, passionate group of individuals dedicated to ensuring that whole brain emulation and related technologies are developed ethically and for the benefit of humanity."</p>
+                <p class="testimonial-author">- Angela Thorton, Ph.D., dissertation in partnership with CCF & Horizon, Univ. of Nottingham</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="compliance-section">
+        <h2>Our Commitment to Accountability</h2>
+        <p>Trust is earned through action. We maintain rigorous financial oversight, publish our research findings, and provide regular updates on our progress. Our governance practices ensure that every dollar and every effort advances the science of whole brain emulation with integrity and purpose.</p>
+        <div class="legal-links">
+            <a href="{{ 'legal/terms-of-use' | url }}" target="_blank" rel="noopener">Terms of Use</a>
+            <a href="{{ 'legal/privacy-policy' | url }}" target="_blank" rel="noopener">Privacy Policy</a>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </section>
+</div>
+  </div>
+</section>
+</section>
+
+<style>
+  
+/* Compliance Page Styles */
+.compliance-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+.compliance-hero {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.compliance-hero-text {
+    flex: 1;
+}
+
+.compliance-hero-image {
+    flex: 1;
+}
+
+.compliance-hero-image img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.compliance-section {
+    margin-bottom: 3rem;
+}
+
+.compliance-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--md-primary-fg-color);
+    padding-bottom: 0.5rem;
+}
+
+.impact-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.metric-card {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metric-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.metric {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--md-primary-fg-color);
+}
+
+.donation-breakdown {
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem 0;
+}
+
+.donation-breakdown-item {
+    text-align: center;
+}
+
+.donation-breakdown-item h4 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--md-primary-fg-color);
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--md-primary-fg-color);
+    color: white !important;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #1e1a6e;
+}
+
+.testimonials {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.testimonial-card {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.testimonial-author {
+    font-style: italic;
+    text-align: right;
+    margin-top: 1rem;
+}
+
+.legal-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.legal-links a {
+    text-decoration: none;
+    color: var(--md-primary-fg-color);
+}
+
+.legal-links a:hover {
+    text-decoration: underline;
+}
+
+/* Legal Page Styles */
+.legal-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+.legal-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.legal-container h2 {
+    font-size: 1.75rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Front page compliance section */
+.mdx-container .compliance-container {
+    color: white;
+}
+
+.mdx-container .compliance-section h2 {
+    color: white;
+    border-bottom-color: white;
+}
+
+.mdx-container .metric-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.mdx-container .metric {
+    color: white;
+}
+
+.mdx-container .donation-breakdown-item h4 {
+    color: white;
+}
+
+.mdx-container .testimonial-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.mdx-container .legal-links a {
+    color: white;
+}
+
+/* Slideshow Styles */
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.slide-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    color: white;
+}
+
+.slide--alt .slide-content {
+    flex-direction: row-reverse;
+}
+
+.slide-text {
+    flex: 1;
+}
+
+.slide-image {
+    flex: 1;
+}
+
+.slide-image img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.slide-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.slide-controls button {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.slide-dots {
+    text-align: center;
+    padding: 1rem;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.dot.active {
+    background: var(--md-primary-fg-color);
+}
+
+  /* Application header should be static for the landing page */
+  .md-header {
+    position: initial;
+  }
+
+  /* Remove spacing, as we cannot hide it completely */
+  .md-main__inner {
+    margin: 0;
+  }
+
+  /* Hide main content for now */
+  .md-content {
+    display: none;
+  }
+
+  /* Hide table of contents */
+  @media screen and (min-width: 60em) {
+    .md-sidebar--secondary {
+      display: none;
+    }
+  }
+
+  /* Hide navigation */
+  @media screen and (min-width: 76.25em) {
+    .md-sidebar--primary {
+      display: none;
+    }
+  }
+
+  /* Fix style for the footer color */
+  .md-main {
+    background-color: hsla(230, 15%, 14%, 1);
+  }
+
+  .emphasized-link:hover {
+    background-color: #000070;
+  }
+
+  /* New styles */
+  .md-grid {
+    max-width: 80%;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 76.25em) {
+    .md-grid {
+      max-width: 80%;
+      margin: 0 auto;
+    }
+  }
+
+  .social-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    z-index: 100;
+  }
+
+  .social-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    z-index: 100;
+  }
+
+  .mdx-hero__image iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .content-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .activity {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+  }
+
+  .news-section {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+  }
+
+  @media screen and (max-width: 60em) {
+    /*mobile title small fix*/
+    .md-header__topic {
+      display: none;
+    }
+  }
+  .slideshow-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: -3rem auto 2rem !important;
+    position: relative;
+    overflow: hidden;
+  }
+  .slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  .slide {
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+  .slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    max-height: 80vh;
+  }
+  .slide-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+  }
+  .slide-controls button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .slide-dots {
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+  }
+  .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+  }
+  .active,
+  .dot:hover {
+    background-color: #717171;
+  }
+
+/* Compliance Page Styles */
+.compliance-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+.compliance-hero {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.compliance-hero-text {
+    flex: 1;
+}
+
+.compliance-hero-image {
+    flex: 1;
+}
+
+.compliance-hero-image img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.compliance-section {
+    margin-bottom: 3rem;
+}
+
+.compliance-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--md-primary-fg-color);
+    padding-bottom: 0.5rem;
+}
+
+.impact-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.metric-card {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metric-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.metric {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--md-primary-fg-color);
+}
+
+.donation-breakdown {
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem 0;
+}
+
+.donation-breakdown-item {
+    text-align: center;
+}
+
+.donation-breakdown-item h4 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--md-primary-fg-color);
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--md-primary-fg-color);
+    color: white !important;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #1e1a6e;
+}
+
+.testimonials {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.testimonial-card {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.testimonial-author {
+    font-style: italic;
+    text-align: right;
+    margin-top: 1rem;
+}
+
+.legal-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.legal-links a {
+    text-decoration: none;
+    color: var(--md-primary-fg-color);
+}
+
+.legal-links a:hover {
+    text-decoration: underline;
+}
+
+/* Legal Page Styles */
+.legal-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+.legal-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.legal-container h2 {
+    font-size: 1.75rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.slideshow-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+[data-md-color-scheme="white"] .slideshow-title {
+  color: white;
+}
+
+/* Front page compliance section */
+[data-md-color-scheme="white"] .mdx-container .compliance-container {
+    color: white;
+}
+
+[data-md-color-scheme="white"] .mdx-container .compliance-section h2 {
+    color: white;
+    border-bottom-color: white;
+}
+
+[data-md-color-scheme="white"] .mdx-container .metric-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+[data-md-color-scheme="white"] .mdx-container .metric {
+    color: white;
+}
+
+[data-md-color-scheme="white"] .mdx-container .donation-breakdown-item h4 {
+    color: white;
+}
+
+[data-md-color-scheme="white"] .mdx-container .testimonial-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+[data-md-color-scheme="white"] .mdx-container .legal-links a {
+    color: white;
+}
+
+.mdx-hero {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+ </style>
+
+{% endblock %}
+
+<!-- Content -->
+{% block content %}{% endblock %}
+
+<!-- Application footer -->
+ 

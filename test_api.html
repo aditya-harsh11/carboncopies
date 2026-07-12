@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Testing API Connection</h1>
+    <button onclick="testApi()">Test API</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testApi() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/team-members');
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `<p>Success! Got ${data.length} team members.</p><p>First member: ${data[0].name}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p>Error: ${response.status} ${response.statusText}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

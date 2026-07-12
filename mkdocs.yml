@@ -1,0 +1,409 @@
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to
+# deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+# sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+
+# Project information
+site_name: Carboncopies Foundation
+site_url: https://carboncopies.org/
+# site_author: Martin Donath
+# site_description: >-
+  # Write your documentation in Markdown and create a professional static site in
+  # minutes – searchable, customizable, in 60+ languages, for all devices
+
+watch:
+  - ./material
+
+# Repository
+repo_name: carboncopies
+repo_url: https://gitlab.braingenix.org/carboncopies/
+#color_mode_toggle: true
+#color_mode: light
+
+# Copyright
+# copyright: Copyright &copy; 2016 - 2024 Martin Donath
+
+# copyright: >
+#   <a href="#__consent">Change cookie settings</a>
+
+# Configuration
+theme:
+  name: material
+  custom_dir: material/overrides
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    # - content.code.select
+    # - content.footnote.tooltips
+    # - content.tabs.link
+    - content.tooltips
+    # - header.autohide
+    - navigation.expand
+    - navigation.footer
+    # - navigation.indexes
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    # - navigation.prune
+    # - navigation.sections
+    - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    # - toc.integrate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: indigo
+      toggle:
+        #icon: material/toggle-switch
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        #icon: material/toggle-switch-off
+        icon: material/weather-sunny
+        name: Switch to system preference
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/Favicon.png
+  # icon:
+  #   logo: logo
+  logo: assets/images/HeaderImage.png
+
+# Plugins
+plugins:
+  - redirects:
+      redirect_maps:
+        # The mappings below redirect the year/month categories to their corresponding workshop pages.
+        # See the nav tree structure.
+        'Events/Workshops/Year-Month/2020-Dec.md' : 'Events/Workshops/Topic/UpdatingRoadmap/Part6/index.md'
+        'Events/Workshops/Year-Month/2020-March.md' : 'Events/Workshops/Topic/UpdatingRoadmap/Part4/index.md'
+        'Events/Workshops/Year-Month/2019-Dec.md' : 'Events/Workshops/Topic/UpdatingRoadmap/Part3/index.md'
+        'Events/Workshops/Year-Month/2019-Sept.md' : 'Events/Workshops/Topic/UpdatingRoadmap/Part2/index.md'
+        'Events/Workshops/Year-Month/2019-June.md' : 'Events/Workshops/Topic/UpdatingRoadmap/OxfordRoadmapReview/index.md'
+        'Events/Workshops/Year-Month/2019-March.md' : 'Events/Workshops/Topic/AISafety/index.md'
+        'Events/Workshops/Year-Month/2018-Sept.md' : 'Events/Workshops/Topic/MetaphysicsEthics/index.md'
+        'Events/Workshops/Year-Month/2018-April.md' : 'Events/Workshops/Topic/BrainPreservationToReconstruction/index.md'
+        'Events/Workshops/Year-Month/2018-Jan.md' : 'Events/Workshops/Topic/ReverseEngineering/index.md'
+
+#   - blog
+  - search:
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+#   - minify:
+#       minify_html: true
+
+# Hooks
+hooks:
+  - material/overrides/hooks/shortcodes.py
+  - material/overrides/hooks/translations.py
+
+# Additional configuration
+extra:
+  status:
+    new: Recently added
+    deprecated: Deprecated
+  analytics:
+    provider: google
+    property: G-GVN4RLJQMK
+    # feedback:
+    #   title: Was this page helpful?
+    #   ratings:
+    #     - icon: material/emoticon-happy-outline
+    #       name: This page was helpful
+    #       data: 1
+    #       note: >-
+    #         Thanks for your feedback!
+    #     - icon: material/emoticon-sad-outline
+    #       name: This page could be improved
+    #       data: 0
+    #       note: >- 
+    #         Thanks for your feedback! Help us improve this page by
+    #         using our <a href="..." target="_blank" rel="noopener">feedback form</a>.
+  consent:
+    title: Cookie consent
+    description: >- 
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our information and whether users
+      find what they're searching for. With your consent, you're helping us to
+      improve our site.
+
+  social:
+    - icon: fontawesome/brands/gitlab
+      link: https://gitlab.braingenix.org/carboncopies/
+    - icon: fontawesome/brands/facebook
+      link: https://www.facebook.com/groups/carboncopies/
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/carboncopiesorg
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/8494124/
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/channel/UCuNZLgW-6Xcp6wfyb2Y_Thw
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/quqzV4P4Z4
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:contact@carboncopies.org
+
+
+extra_css:
+  - stylesheets/extra.css
+
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/mkdocs.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# Page tree
+nav:
+
+  - Overview:
+    - Mission: About/Mission.md
+    - Impact: About/impact.md
+    - FAQ: About/FAQ.md
+    - Team:
+      - Meet Our Team: About/Team/Us.md
+      - Randal Koene:
+        - Bio: About/Team/Bios/RandalKoene.md
+        - Talks: About/Team/Bios/RandalKoene/Talks.md
+        - Interviews: About/Team/Bios/RandalKoene/Interviews.md
+      - Stefania Schino: About/Team/Bios/StefaniaSchino.md
+      - Angela Thornton: About/Team/Bios/AngelaThornton.md
+    - Press Inquiries: About/PressInquiries.md
+    - Due Diligence: About/DueDiligence.md
+    - Fraud Alert: About/Fraud-Alert.md
+
+  - Research :
+    - Research Overview: Research/index.md
+    - BrainGenix:
+      - BrainGenix Overview: Research/BrainGenix/About.md
+      - Getting Started:
+          - Installation Overview: Research/BrainGenix/GettingStarted/Overview.md
+          - System Requirements: Research/BrainGenix/GettingStarted/Requirements.md
+          - Backend Installation: Research/BrainGenix/GettingStarted/BackendInstallation.md
+          - Client Installation: Research/BrainGenix/GettingStarted/ClientInstallation.md
+      - Virtual Brain Platform:
+        - VBP Overview: Research/BrainGenix/Divisions/PythonClient/Overview.md
+        - API Design: Research/BrainGenix/Divisions/PythonClient/APIDesign.md
+        - Installation: Research/BrainGenix/Divisions/PythonClient/Installation.md
+        - Simulations:
+          - Simulations Overview: Research/BrainGenix/Divisions/PythonClient/Simulations/Overview.md
+          - Creating Simulation Instance: Research/BrainGenix/Divisions/PythonClient/Simulations/Creation.md
+          - Geometry: Research/BrainGenix/Divisions/PythonClient/Simulations/Geometry.md
+          - Ball-Stick Neurons: Research/BrainGenix/Divisions/PythonClient/Simulations/BSNeurons.md
+          - Simple Compartmental Neurons: Research/BrainGenix/Divisions/PythonClient/Simulations/SCNeurons.md
+        - Virtual Electrodes:
+          - Virtual Electrodes Overview: Research/BrainGenix/Divisions/PythonClient/Electrodes/GettingStarted.md
+        - Virtual Electron Microscope:
+          - Getting Started with Virtual Electron Microscope: Research/BrainGenix/Divisions/PythonClient/EMRenderer/GettingStarted.md
+          - Presets: Research/BrainGenix/Divisions/PythonClient/EMRenderer/Presets.md
+          - Parameters:
+            - Base Parameters: Research/BrainGenix/Divisions/PythonClient/EMRenderer/ParametersBase.md
+            - Cell Interiors: Research/BrainGenix/Divisions/PythonClient/EMRenderer/ParametersCellInteriors.md
+            - Membrane Outlines: Research/BrainGenix/Divisions/PythonClient/EMRenderer/ParametersMembraneOutline.md
+            - Microscope Noise: Research/BrainGenix/Divisions/PythonClient/EMRenderer/ParametersMicroscopeNoise.md
+            - Microscope Blur: Research/BrainGenix/Divisions/PythonClient/EMRenderer/ParametersMicroscopeBlur.md
+            - Microscope Interference Patterns: Research/BrainGenix/Divisions/PythonClient/EMRenderer/ParametersMicroscopeInterferencePatterns.md
+            - Microscope Contrast/Brightness: Research/BrainGenix/Divisions/PythonClient/EMRenderer/ParametersMicroscopeContrastBrightness.md
+            - Sample Tears: Research/BrainGenix/Divisions/PythonClient/EMRenderer/ParametersMicroscopeTearing.md
+        - Visualizer:
+          - Getting Started: Research/BrainGenix/Divisions/PythonClient/Visualizer/GettingStarted.md
+          - Parameters:
+            - Base Parameters: Research/BrainGenix/Divisions/PythonClient/Visualizer/ParametersBase.md
+            - Filtering Neurons: Research/BrainGenix/Divisions/PythonClient/Visualizer/FilteringNeurons.md
+        - Calcium Imaging:
+          - Getting Started: Research/BrainGenix/Divisions/PythonClient/CalciumImaging/GettingStarted.md
+      - Brain Emulation Challenge:
+        - Overview: Research/BrainGenix/Challenge/Overview.md
+        - Meaningful Operations: Research/BrainGenix/Challenge/MeaningfulOperations.md
+        - Take the Challenge: Research/BrainGenix/Challenge/TakeTheChallenge.md
+        - Challenge Levels:
+          - Level 1: Research/BrainGenix/Challenge/Level01/Level01.md
+          - Level 2: Research/BrainGenix/Challenge/Level02/Level02.md
+        - Submit a Solution: Research/BrainGenix/Challenge/SubmitSolution.md
+        - Format: Research/BrainGenix/Challenge/Format.md
+      - Divisions:
+        - NES:
+          - Overview: Research/BrainGenix/Divisions/NES/Overview.md
+          - Setup: Research/BrainGenix/Divisions/NES/Setup.md
+        - EVM:
+          - Overview: Research/BrainGenix/Divisions/EVM/Overview.md
+          - Setup: Research/BrainGenix/Divisions/EVM/Setup.md
+        - API:
+          - Overview: Research/BrainGenix/Divisions/API/Overview.md
+          - Setup: Research/BrainGenix/Divisions/API/Setup.md
+      - Contribute: Research/BrainGenix/Contribute/Contribute.md
+
+    - Roadmap:
+      - Roadmap Overview: Research/Roadmap/About.md
+      - Visualization Tool: Research/Roadmap/Articles/WholeBrainEmulationRoadmapVisualizationTool.md
+      - Published:
+        - Fidelity: Research/Roadmap/Articles/Fidelity.md
+        - Microscopy: Research/Roadmap/Articles/Microscopy.md
+      - Pre-prints:
+        - Philosophy and Ethics: Research/Roadmap/Articles/PhilosophyAndEthics.md
+      - Upcoming:
+        - Inverse Problem: Research/Roadmap/Articles/InverseProblem.md
+        - Proof-of-Concept Systems: Research/Roadmap/Articles/ProofOfConceptSystems.md
+
+    - Ethics Framework: Research/EthicsFramework.md
+
+  - Education:
+    - Education Overview: Resources/index.md
+    - Learn: Resources/Learn.md
+    - Media: Resources/Media.md
+    - CarbonGPT (Experimental): /CarbonGPT
+    - Lectures: Resources/Lectures.md
+    - Writing:
+      - Books: Resources/Books.md
+      - Posts:
+        - Nondestructive Mind Uploading and the Stream of Consciousness: Resources/Writing/2023_NondestructuveMU/Post.md
+        - The Stream of Consciousness and Personal Identity: Resources/Writing/2019_StreamOfConsciousness/Post.md
+        - Transcending Biology - Reverse Engineering the Brain: Resources/Writing/2018_TranscendingBiology/Post.md
+        - Response to J. Bonilla’s ‘Your mind will never be uploaded to a computer’: Resources/Writing/2018_Response/Post.md
+    - Podcast:
+        - Carboncopies Podcast: Resources/Podcast/Index.md
+        - Episodes:
+          - 11 - Why WBE From Your Preserved Brain is Probably You: Resources/Podcast/Episodes/11_WhyWBEFromYourBrainIsProbablyYou/Post.md
+          - 10 - Introduction from Brain Preservation to Reconstruction: Resources/Podcast/Episodes/10_FromBrainPreservation/Post.md
+
+  - Community:
+
+    - Newsletter:
+      - December 2025: Newsletter/December2025.md
+      - July - August 2024: Newsletter/JulyAugust2024.md
+      - May - July 2024: Newsletter/MayJuly2024.md
+
+    - Events:
+      - Our Events: Events/index.md
+      - Workshops:
+        - Brain Emulation Challenge: Events/Workshops/UpcomingEvents/FebruaryWorkshop2025LandingPage/Page.md
+        - Brain Preservation to Reconstruction: Events/Workshops/Topic/BrainPreservationToReconstruction/index.md
+        - Reverse Engineering the Brain: Events/Workshops/Topic/ReverseEngineering/index.md
+        - AI Safety: Events/Workshops/Topic/AISafety/index.md
+        - Metaphysics and Ethics: Events/Workshops/Topic/MetaphysicsEthics/index.md
+        - Roadmap Part 6: Events/Workshops/Topic/UpdatingRoadmap/Part6/index.md
+        - Roadmap Part 4: Events/Workshops/Topic/UpdatingRoadmap/Part4/index.md
+        - Roadmap Part 3: Events/Workshops/Topic/UpdatingRoadmap/Part3/index.md
+        - Roadmap Part 2: Events/Workshops/Topic/UpdatingRoadmap/Part2/index.md
+        - Roadmap Part 1: Events/Workshops/Topic/UpdatingRoadmap/OxfordRoadmapReview/index.md
+      - Journal Clubs:
+        - Journal Clubs: Events/JournalClubs/index.md
+        - Memory Decoding JC: Events/JournalClubs/MemoryDecoding/index.md
+        - Consciousness and Subjective Experience JC: Events/JournalClubs/ConsciousnessAndSubjectiveExperience/index.md
+      - Livestream: Events/Livestream.md
+
+    - Blog:
+      - Recent: Blog/Recent.md
+      - Technical:
+        - No, a Fruit Fly has not been uploaded: Blog/Posts/FruitFlyNotUploaded/Post.md
+        - Experimental Enhancement of Neurophysiological Function: Blog/Posts/Enhancement/Post.md
+        - Restoration of Function After Brain Damage Using a Neural Prosthesis: Blog/Posts/Restoration/Post.md
+        - Single Neuron Dynamics and Computation: Blog/Posts/Computation/Post.md
+        - Quantum Mechanics and Higher Brain Functions: Blog/Posts/BrainFunction/Post.md
+        - An Introduction to Neuroprosthesis and BCIs: Blog/Posts/Neuroprosthesis/Post.md
+        - Neuromorphic Hardware Designs - A Quick Survey: Blog/Posts/NeuromorphicHardwareDesigns/Post.md
+        - What is Whole Brain Emulation?: Blog/Posts/WhatIsWholeBrainEmulation/Post.md
+      - Uncategorized:
+        - If Simulated Fire Can’t Burn Wood, How Can a Simulation Really Think, Feel or be Conscious?: Blog/Posts/IfSimulatedFireCant/Post.md
+        - Would an Upload Be Me, or Just a Copy; Who is the Real Me?: Blog/Posts/UploadBeMe/Post.md
+        - Brain Health And Brain Emulation: Blog/Posts/BrainHealth/Post.md
+        - Does the Chinese Room Thought Experiment disprove true AI and mind uploading?: Blog/Posts/ChineseRoom/Post.md
+      - Easy Reading:
+        - How Could Whole Brain Emulation Affect Us?: Blog/Posts/WBEHowCouldItAffectUs/Post.md
+        - Why Whole Brain Emulation isn’t a threat to humanity: Blog/Posts/ShouldYouBeScared/Post.md
+        - A reason to hedge on whole-brain emulation: Blog/Posts/HedgeOnWholeBrainEmulation/Post.md
+        - What will the first Substrate Independent Mind Look Like?: Blog/Posts/WhatWillFirstSIMLookLike/Post.md
+        - An Ecosystem for Emulated Minds: Blog/Posts/EcosystemForEM/Post.md
+        - Why We Should Send Uploaded Astronauts On Interstellar Missions: Blog/Posts/Astronauts/Post.md
+        - The Greatest Long-Term Threats Facing Humanity: Blog/Posts/Threats/Post.md
+        - How Pieces of Live Human Brain are Helping Scientists Map Nerve Cells: Blog/Posts/BrainBits/Post.md
+        - Where We Go From Here: Blog/Posts/FromHere/Post.md
+        - Is the Brain a Quantum Computer?: Blog/Posts/BrainQuantum/Post.md
+        - BrainFacts.org: Blog/Posts/BrainFacts/Post.md
+        - The Neural Archives Foundation: Blog/Posts/NeuralArchives/Post.md
+        - The Preconscious Smart Home: Blog/Posts/Preconscious/Post.md
+
+  - Internships: Internships/index.md
+
+  - Join: Join/index.md
+
+  - Contact: Contact/index.md
+
+  - Donate: Donate/index.md
+
+  - Legal:
+    - Transparency and Trust: legal/transparency-and-trust.md
+    - Terms of Use: legal/terms-of-use.md
+    - Privacy Policy: legal/privacy-policy.md
