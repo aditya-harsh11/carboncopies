@@ -115,6 +115,18 @@ async def get_team_members(
         return []
 
 
+# NOTE: This static route MUST be declared before the dynamic
+# `/api/team-members/{member_id}` route below. FastAPI matches in declaration
+# order, so if `{member_id}` (int) comes first it swallows "departments" and 422s.
+@app.get("/api/team-members/departments", response_model=List[Department])
+async def get_departments():
+    """
+    Get list of all valid departments.
+    This endpoint doesn't require database access.
+    """
+    return list(Department)
+
+
 @app.get("/api/team-members/{member_id}", response_model=Optional[TeamMember])
 async def get_team_member(member_id: int):
     """
@@ -289,15 +301,6 @@ async def delete_team_member(member_id: int):
             status_code=400,
             detail=f"Error deleting team member: {str(e)}"
         )
-
-
-@app.get("/api/team-members/departments", response_model=List[Department])
-async def get_departments():
-    """
-    Get list of all valid departments.
-    This endpoint doesn't require database access.
-    """
-    return list(Department)
 
 
 if __name__ == "__main__":
