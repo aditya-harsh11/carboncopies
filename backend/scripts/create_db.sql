@@ -40,3 +40,19 @@ CREATE TRIGGER update_team_members_updated_at
 -- Grant permissions to the owner
 GRANT ALL PRIVILEGES ON TABLE team_members TO chardapple;
 GRANT ALL PRIVILEGES ON SEQUENCE team_members_id_seq TO chardapple;
+
+-- Sessions for the internal members-area auth (Google OAuth).
+-- Opaque server-side sessions so logout / revocation works; the browser cookie
+-- carries only the random token, never user data.
+CREATE TABLE IF NOT EXISTS sessions (
+    token       VARCHAR(64) PRIMARY KEY,
+    email       VARCHAR(255) NOT NULL,
+    name        VARCHAR(255),
+    picture     VARCHAR(1000),
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    expires_at  TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
+
+GRANT ALL PRIVILEGES ON TABLE sessions TO chardapple;

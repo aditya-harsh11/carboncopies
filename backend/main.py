@@ -9,9 +9,13 @@ import sys
 # Add backend directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+from fastapi.responses import HTMLResponse, RedirectResponse
+from starlette.middleware.sessions import SessionMiddleware
+
 from models import TeamMember, TeamMemberCreate, TeamMemberUpdate, Department
 from database import get_db, return_db, DBConnectionError, init_connection_pool, close_all_connections
 from config import settings
+from auth import router as auth_router, get_optional_user
 
 # Initialize connection pool on startup
 init_connection_pool()
@@ -24,21 +28,29 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Add OPTIONS handler for all routes
-@app.options("/{path:path}")
-async def handle_options(path: str):
-    """Handle OPTIONS requests for CORS preflight"""
-    return {"message": "OK"}
-
-# CORS for development
+# CORS — explicit origins (no "*") because the auth cookie is credentialed and
+# browsers reject a wildcard origin on credentialed requests.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:9000", "http://localhost:8080", "http://127.0.0.1:9000", "http://127.0.0.1:8080", "*"],
+    allow_origins=settings.cors_origins(),
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
     allow_credentials=True,
     expose_headers=["*"]
 )
+
+# Signed cookie carrying only the transient OAuth state/nonce between
+# /auth/login and /auth/callback (Authlib needs request.session). The logged-in
+# session is a separate opaque cookie backed by Postgres (see auth.py).
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SESSION_SECRET,
+    same_site="lax",
+    https_only=settings.COOKIE_SECURE,
+)
+
+# Google-OAuth login routes: /auth/login, /auth/callback, /auth/logout, /auth/me
+app.include_router(auth_router)
 
 
 # Dependency to get DB connection
@@ -76,6 +88,41 @@ async def health_check():
         return {"status": "ok", "database": "disconnected", "warning": "Database unavailable"}
     except Exception as e:
         return {"status": "ok", "database": "error", "warning": str(e)}
+
+
+# Internal members area — a blank white page with an "Internal Website" header.
+_INTERNAL_PAGE = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Internal Website</title>
+<style>
+  body { margin: 0; background: #fff; color: #111;
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { display: flex; align-items: center; justify-content: space-between;
+           padding: 1.1rem 1.6rem; border-bottom: 1px solid #eaeaea; }
+  header h1 { margin: 0; font-size: 1.3rem; }
+  header a { font-size: 0.85rem; color: #2e279d; text-decoration: none; }
+  header a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Internal Website</h1>
+    <a href="/auth/logout">Log out</a>
+  </header>
+</body>
+</html>"""
+
+
+@app.get("/internal")
+async def internal_home(user: Optional[dict] = Depends(get_optional_user)):
+    """Gated internal members area. Unauthenticated browsers are bounced to Google
+    login; authenticated @carboncopies.org users see the page."""
+    if not user:
+        return RedirectResponse(url="/auth/login?next=/internal", status_code=302)
+    return HTMLResponse(_INTERNAL_PAGE)
 
 
 @app.get("/api/team-members", response_model=List[TeamMember])
