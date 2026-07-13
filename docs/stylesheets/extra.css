@@ -304,3 +304,72 @@ article.md-content__inner {
         color: var(--md-default-fg-color--light);
     }
 }
+
+/* ── Members-area login button (header, top-right) ──────────────────────── */
+
+/* Selector matches Material's `.md-header__button:not([hidden])` specificity
+   (0,2,0) so our flex layout wins — otherwise the icon and label stack. */
+.md-header__button.md-ccf-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35em;
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    padding: 0.3rem 0.6rem;
+    margin: 0.2rem;
+    line-height: 1;
+    border: 1px solid currentColor;
+    border-radius: 0.2rem;
+    color: var(--md-primary-bg-color);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0.9;
+    transition: opacity 125ms, background-color 125ms;
+}
+
+.md-header__button.md-ccf-login:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.md-ccf-login__icon {
+    display: block;
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-shrink: 0;
+}
+
+/* ── Cookie consent banner: compact, single-row Accept / Manage buttons ──── */
+.md-consent__controls {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.md-consent__controls .md-button {
+    margin: 0;
+    padding: 0.3em 1em;
+    font-size: 0.68rem;
+    white-space: nowrap;
+}
+
+/* Icon-only on narrow screens to keep the header from crowding */
+@media screen and (max-width: 44.9375em) {
+    .md-header__button.md-ccf-login {
+        width: 1.9rem;
+        height: 1.9rem;
+        padding: 0;
+        justify-content: center;
+        border: none;
+    }
+    .md-ccf-login__label {
+        display: none;
+    }
+}

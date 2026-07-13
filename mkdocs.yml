@@ -72,22 +72,20 @@ theme:
     - toc.follow
     # - toc.integrate
   palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: custom
-      accent: indigo
-      toggle:
-        #icon: material/toggle-switch
-        icon: material/weather-night
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
+    # Dark (slate) is listed first with no media query, so the site defaults to
+    # dark for everyone; visitors can still toggle to light.
+    - scheme: slate
       primary: black
       accent: indigo
       toggle:
-        #icon: material/toggle-switch-off
         icon: material/weather-sunny
-        name: Switch to system preference
+        name: Switch to light mode
+    - scheme: default
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
   font:
     text: Roboto
     code: Roboto Mono
@@ -125,6 +123,10 @@ hooks:
 
 # Additional configuration
 extra:
+  # URL of the internal members area (Google-login-gated). Defaults to a
+  # same-domain path for prod (Build.sh); for local dev the API runs on :8080, so
+  # DevRun.sh sets INTERNAL_URL=http://localhost:8080/internal.
+  internal_url: !ENV [INTERNAL_URL, "/internal"]
   status:
     new: Recently added
     deprecated: Deprecated
