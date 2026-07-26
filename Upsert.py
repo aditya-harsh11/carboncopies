@@ -19,7 +19,12 @@ ARTIFACT_PATTERNS = [
     r'\.min\.(js|css)$',          # minified bundles (often duplicating their own source)
     r'[\\/]assets[\\/]javascripts[\\/]',
     r'[\\/]assets[\\/]stylesheets[\\/]',
-    r'[\\/]material[\\/]templates[\\/]',
+    # The whole vendored MkDocs-Material theme, not just its built assets:
+    # material/plugins/*.py is the theme's own source and was being indexed as
+    # if it were research. Verified against the shipped DB that all 5,937
+    # material/ chunks live under Dataset/Carboncopies/CCF-Website/material/,
+    # so nothing legitimate is caught by this.
+    r'[\\/]material[\\/](templates|plugins|extensions|overrides)[\\/]',
     r'[\\/]lunr[\\/]',            # search stemmers for languages we do not serve
     r'iconsearch_index\.json$',   # FontAwesome icon paths
     r'[\\/]site-packages[\\/]',
