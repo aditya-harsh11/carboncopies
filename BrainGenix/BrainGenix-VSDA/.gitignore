@@ -1,0 +1,95 @@
+# Build directories
+/build/
+/Build/
+/Binaries/
+/out/
+/x64/
+/x86/
+/Release/
+/Debug/
+/MinSizeRel/
+/RelWithDebInfo/
+minio
+minio-data/
+
+# Generated files
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+*.a
+*.lib
+*.exp
+*.ilk
+*.pdb
+*.ipch
+*.idb
+*.pch
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+*.cmake
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+
+# vcpkg artifacts
+/vcpkg/downloads/
+/vcpkg/buildtrees/
+/vcpkg/packages/
+/vcpkg/installed/
+/vcpkg/vcpkg_installed/
+vcpkg
+
+# Intel oneAPI
+*.mod
+*.optrpt
+*.d
+
+# IDE specific files
+.vscode/
+.idea/
+*.sln
+*.vcxproj*
+*.vcproj
+*.user
+*.suo
+*.ncb
+*.sdf
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs and diagnostics
+*.log
+*.tlog
+*.lastbuildstate
+*.stackdump
+
+# Executable output
+/minimal-sycl
+/minimal-sycl.exe
+
+# Local development files
+*.local
+.env
+*.swp
+*.swo
+*~
+Tools/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB*
+llvm.sh*
+Tools/AdaptiveCpp
+Tools/build-adaptivecpp
+
+ThirdParty/AdaptiveCpp
+ThirdParty/adaptivecpp-install/
+ThirdParty/build-adaptivecpp

@@ -1,0 +1,26 @@
+# Server configuration
+server:
+  host: localhost
+  port: 8080
+  ssl: true
+  max_workers: 4
+
+# Database configuration
+database:
+  name: brain_genix_db
+  host: db.localhost
+  port: 5432
+  timeout: 30.5
+  pool_size: 10
+
+# Application settings
+debug: false
+log_level: info
+max_connections: 100
+cache_size: 256
+
+# Feature flags
+features:
+  gpu_acceleration: true
+  real_time_processing: false
+  analytics: true

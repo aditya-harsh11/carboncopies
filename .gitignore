@@ -1,0 +1,8 @@
+*venv*/
+.venv/
+venv/
+.env
+Dataset/
+chroma/
+py/
+__pycache__
