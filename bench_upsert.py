@@ -23,7 +23,6 @@ Usage
 
 import argparse
 import os
-import re
 import statistics
 import sys
 import time
@@ -38,12 +37,13 @@ IGNORE_FILES = ['.gitignore', 'package-lock.json', 'yarn.lock']
 INDEXED_EXTS = ['.h', '.cpp', '.json', '.py', '.md', '.txt', '.cs', '.java', '.js', '.ts', '.html', '.css']
 CODE_EXTS = ['.h', '.cpp', '.py', '.java', '.cs', '.ts']
 
-# The vendor/build-artifact signature from the 38.8% finding (Dev Notes 6.6c).
-JUNK_RE = re.compile(
-    r'(\.min\.(js|css)|/assets/javascripts/|/assets/stylesheets/|'
-    r'/material/templates/|lunr|iconsearch_index)',
-    re.I,
-)
+# Artifact detection deliberately reuses Upsert.is_build_artifact rather than
+# keeping a second copy of the patterns. The previous local regex had drifted
+# from the shipping one in two ways that both under-reported: it matched only
+# forward slashes (so it never fired on Windows paths) and it still covered
+# only material/templates/, missing the plugins/extensions/overrides widening.
+# It reported 29.2% where the real filter skips 46.9%.
+is_junk = Upsert.is_build_artifact
 
 
 class Stage:
@@ -127,7 +127,7 @@ def run_cpu(dataset_path):
         chunks_by_collection[collection] += len(kept)
         chunks_by_ext[ext] += len(kept)
         chunk_lengths.extend(len(c) for c in kept)
-        if JUNK_RE.search(path):
+        if is_junk(path):
             junk_chunks += len(kept)
 
     wall = time.perf_counter() - wall0
@@ -188,14 +188,15 @@ def collect_chunks(dataset_path, limit):
     return out
 
 
-def run_embed(dataset_path, api_url, sample, batch_size, total_chunks_hint, workers=1):
+def run_embed(dataset_path, api_url, sample, batch_size, total_chunks_hint, workers=1,
+              model_name='embedding-model'):
     """Measure embedding throughput at a given batch size, then extrapolate."""
     chunks = collect_chunks(dataset_path, sample)
     if not chunks:
         print('No chunks collected; aborting.')
         return
 
-    ef = Upsert.LlamaCppEmbeddingFunction(api_base_url=api_url, model_name='embedding-model')
+    ef = Upsert.LlamaCppEmbeddingFunction(api_base_url=api_url, model_name=model_name)
 
     # Warm the server so the first batch does not absorb model load time.
     ef(['warmup'])
@@ -247,6 +248,9 @@ def main():
     ap.add_argument('stage', choices=['cpu', 'embed'])
     ap.add_argument('--dataset', default='./Dataset')
     ap.add_argument('--api-url', default='http://localhost:8082')
+    ap.add_argument('--model', default='embedding-model',
+                    help="Model name sent to the server. Ollama needs the real tag "
+                         "(e.g. 'embeddinggemma'); llama.cpp uses its --alias.")
     ap.add_argument('--sample', type=int, default=500)
     ap.add_argument('--batch', type=int, default=10)
     ap.add_argument('--workers', type=int, default=1)
@@ -261,7 +265,8 @@ def main():
     if args.stage == 'cpu':
         run_cpu(args.dataset)
     else:
-        run_embed(args.dataset, args.api_url, args.sample, args.batch, args.total_chunks, args.workers)
+        run_embed(args.dataset, args.api_url, args.sample, args.batch, args.total_chunks,
+                  args.workers, args.model)
 
 
 if __name__ == '__main__':
