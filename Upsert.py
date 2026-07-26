@@ -9,6 +9,40 @@ import numpy as np
 from typing import List, Dict, Any, Optional, Tuple
 from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 
+# Vendored build artifacts that are not knowledge. The Dataset/ tree contains a
+# copy of the CCF-Website repo including its vendored MkDocs-Material theme, so
+# without this filter the pipeline embeds minified bundles, a Thai word
+# segmentation dictionary and a FontAwesome icon manifest as if they were
+# research. Measured: ~30% of all chunks produced. Skipping them is the single
+# largest speedup available, and it also removes noise from retrieval.
+ARTIFACT_PATTERNS = [
+    r'\.min\.(js|css)$',          # minified bundles (often duplicating their own source)
+    r'[\\/]assets[\\/]javascripts[\\/]',
+    r'[\\/]assets[\\/]stylesheets[\\/]',
+    r'[\\/]material[\\/]templates[\\/]',
+    r'[\\/]lunr[\\/]',            # search stemmers for languages we do not serve
+    r'iconsearch_index\.json$',   # FontAwesome icon paths
+    r'[\\/]site-packages[\\/]',
+    r'[\\/]node_modules[\\/]',
+    r'[\\/]\.git[\\/]',
+    r'[\\/]dist[\\/]',
+    r'\.bundle\.(js|css)$',
+    r'\.map$',                    # source maps
+]
+
+_ARTIFACT_RE = re.compile('|'.join(ARTIFACT_PATTERNS), re.IGNORECASE)
+
+
+def is_build_artifact(filepath: str) -> bool:
+    """True if this path is a vendored/build artifact rather than real content."""
+    return bool(_ARTIFACT_RE.search(filepath))
+
+
+def content_hash(text: str) -> str:
+    """Stable hash of chunk text, used to skip re-embedding unchanged content."""
+    return hashlib.sha256(text.encode('utf-8')).hexdigest()[:32]
+
+
 def get_embedding_dimension(embedding_function: EmbeddingFunction, sample_text: str = "test") -> Optional[int]:
     """
     Get the embedding dimension from an embedding function by testing it with sample text.
@@ -122,28 +156,20 @@ class LlamaCppEmbeddingFunction(EmbeddingFunction[Documents]):
                 raise ValueError(f"Invalid API response: 'data' is not a list")
             
             # Extract the embeddings from the response
+            # A zero vector is not a safe fallback: it is a valid-looking point in
+            # the index that silently degrades retrieval forever. Fail loudly
+            # instead -- the caller already has retry/backoff around this.
             embeddings = []
             for i, item in enumerate(data["data"]):
                 if "embedding" not in item:
-                    print(f"Warning: Item {i} missing 'embedding' key, using zero vector")
-                    # Use a zero vector as fallback with expected dimension
-                    dim = getattr(self, 'last_dimension', 768)
-                    embeddings.append([0.0] * dim)
-                else:
-                    embeddings.append(item["embedding"])
-            
-            # Validate embeddings - if empty, use zero vectors
-            if len(embeddings) == 0:
-                print(f"Warning: Got empty embeddings list, creating zero vectors")
-                dim = getattr(self, 'last_dimension', 768)
-                embeddings = [[0.0] * dim for _ in range(len(input))]
-            elif len(embeddings) != len(input):
-                print(f"Error: Expected {len(input)} embeddings, got {len(embeddings)}")
-                # Pad with zero vectors if we have fewer than expected
-                dim = getattr(self, 'last_dimension', 768)
-                while len(embeddings) < len(input):
-                    embeddings.append([0.0] * dim)
-            
+                    raise ValueError(f"API response item {i} has no 'embedding' key")
+                embeddings.append(item["embedding"])
+
+            if len(embeddings) != len(input):
+                raise ValueError(
+                    f"Embedding count mismatch: expected {len(input)}, got {len(embeddings)}"
+                )
+
             # Check for None or invalid values
             for i, emb in enumerate(embeddings):
                 if emb is None:
@@ -244,16 +270,27 @@ def clean_content(content, file_extension):
     
     return content
 
-def process_directory_to_collection(directory_path: str, collection_name: str, client, embedding_function):
+def process_directory_to_collection(directory_path: str, collection_name: str, client, embedding_function,
+                                    batch_size: int = 100,
+                                    skip_artifacts: bool = True, incremental: bool = True):
     """
     Processes a directory and upserts its text files into a ChromaDB collection.
-    
+
     Args:
         directory_path (str): The path to the directory to process.
         collection_name (str): The name of the ChromaDB collection.
         client: The ChromaDB client instance.
         embedding_function: The embedding function to use.
+        batch_size (int): Chunks per embedding request. The embedding call is the
+            entire cost of this pipeline, and per-request overhead dominates at
+            small sizes -- measured 3.4 chunks/s at 10 vs 9.7 at 100.
+            Concurrent requests were measured too (~1.3x at 4 workers) but the
+            model is CPU-bound, so it is not worth restructuring the retry loop.
+        skip_artifacts (bool): Skip vendored build artifacts (see ARTIFACT_PATTERNS).
+        incremental (bool): Skip chunks whose content hash already matches what is
+            stored, so unchanged files are not re-embedded.
     """
+    artifacts_skipped = 0
     try:
         # Check if collection exists and get its embedding dimension
         existing_collections = client.list_collections()
@@ -264,8 +301,14 @@ def process_directory_to_collection(directory_path: str, collection_name: str, c
         
         collection = None
         if collection_exists:
-            # Collection exists - check dimension compatibility
-            collection = client.get_collection(name=collection_name)
+            # Collection exists - check dimension compatibility.
+            # The embedding function MUST be passed here. Without it Chroma falls
+            # back to its bundled default (all-MiniLM, 384-dim) instead of the
+            # llama.cpp server, so every batch fails against a 768-dim collection
+            # with "expecting embedding with dimension of 768, got 384" -- meaning
+            # no re-run against an existing DB could ever write anything.
+            collection = client.get_collection(name=collection_name,
+                                               embedding_function=embedding_function)
             existing_dim = get_collection_embedding_dimension(collection)
             ef_dim = get_embedding_dimension(embedding_function)
             
@@ -322,7 +365,12 @@ def process_directory_to_collection(directory_path: str, collection_name: str, c
                     
                 # Construct the full file path
                 filepath = os.path.join(root, file)
-                
+
+                # Skip vendored build artifacts before doing any work on them.
+                if skip_artifacts and is_build_artifact(filepath):
+                    artifacts_skipped += 1
+                    continue
+
                 try:
                     # Print the file being indexed
                     print(f"Indexing file: {filepath}")
@@ -365,7 +413,10 @@ def process_directory_to_collection(directory_path: str, collection_name: str, c
                             "chunk_index": i,
                             "file_name": file,
                             "collection": collection_name,
-                            "file_type": file_extension.lower()
+                            "file_type": file_extension.lower(),
+                            # Lets a later run detect that this chunk is unchanged
+                            # and skip re-embedding it entirely.
+                            "content_hash": content_hash(chunk)
                         })
                         ids_to_upsert.append(doc_id)
                         chunk_count += 1
@@ -379,14 +430,46 @@ def process_directory_to_collection(directory_path: str, collection_name: str, c
                     print(f"Error processing file {filepath}: {e}")
                     continue
 
+        if artifacts_skipped:
+            print(f"Skipped {artifacts_skipped} vendored build-artifact files (use --no-skip-artifacts to include them).")
+
+        # Incremental: drop any chunk whose stored content hash already matches.
+        # Embedding is the whole cost of this pipeline, so not re-embedding
+        # unchanged content turns a repeat run from ~35 minutes into seconds.
+        if incremental and documents_to_upsert:
+            before = len(documents_to_upsert)
+            try:
+                unchanged = set()
+                probe = 500  # chunked so we never build one enormous id list
+                for i in range(0, len(ids_to_upsert), probe):
+                    id_slice = ids_to_upsert[i:i + probe]
+                    existing = collection.get(ids=id_slice, include=['metadatas'])
+                    for got_id, meta in zip(existing.get('ids', []), existing.get('metadatas', []) or []):
+                        if meta and meta.get('content_hash'):
+                            unchanged.add((got_id, meta['content_hash']))
+
+                keep = [
+                    j for j, (doc_id, meta) in enumerate(zip(ids_to_upsert, metadatas_to_upsert))
+                    if (doc_id, meta['content_hash']) not in unchanged
+                ]
+                documents_to_upsert = [documents_to_upsert[j] for j in keep]
+                metadatas_to_upsert = [metadatas_to_upsert[j] for j in keep]
+                ids_to_upsert = [ids_to_upsert[j] for j in keep]
+
+                skipped = before - len(documents_to_upsert)
+                if skipped:
+                    print(f"Incremental: {skipped:,} of {before:,} chunks unchanged, skipping re-embed "
+                          f"({skipped / before * 100:.1f}%).")
+            except Exception as e:
+                print(f"Incremental check failed ({e}); embedding everything.")
+
         if documents_to_upsert:
             # Upsert the documents in batches to avoid server timeouts
-            batch_size = 10  # Default batch size
             total_batches = (len(documents_to_upsert) + batch_size - 1) // batch_size
-            
+
             successful_batches = 0
             failed_batches = 0
-            
+
             for i in range(0, len(documents_to_upsert), batch_size):
                 batch_documents = documents_to_upsert[i:i + batch_size]
                 batch_metadatas = metadatas_to_upsert[i:i + batch_size]
@@ -504,22 +587,27 @@ def split_by_pattern(content, pattern):
     Split content by a regex pattern while keeping the matches.
     """
     chunks = []
-    last_idx = 0
     matches = list(re.finditer(pattern, content))
-    
+
     if not matches:
         return [content]
-    
-    for i, match in enumerate(matches):
-        start_idx = match.start()
-        if i > 0:
-            chunks.append(content[last_idx:start_idx])
-        last_idx = start_idx
-    
+
+    # Everything before the first match is real content -- Python imports and
+    # module docstrings, C++ #includes and headers. Emitting it was missing
+    # before, so it was silently dropped from the index for every code file.
+    first_idx = matches[0].start()
+    if content[:first_idx].strip():
+        chunks.append(content[:first_idx])
+
+    last_idx = first_idx
+    for match in matches[1:]:
+        chunks.append(content[last_idx:match.start()])
+        last_idx = match.start()
+
     # Add the remaining content
     if last_idx < len(content):
         chunks.append(content[last_idx:])
-    
+
     return chunks
 
 def chunk_text_file(content):
@@ -544,7 +632,9 @@ def chunk_text_file(content):
     
     return chunks
 
-def upsert_dataset_directories(dataset_path: str, db_path: str, model_name: str = "embedding-model", api_url: str = "http://localhost:8082"):
+def upsert_dataset_directories(dataset_path: str, db_path: str, model_name: str = "embedding-model",
+                               api_url: str = "http://localhost:8082", batch_size: int = 100,
+                               skip_artifacts: bool = True, incremental: bool = True):
     """
     Upserts all text files from subdirectories of a dataset path into separate ChromaDB collections.
     Each subdirectory becomes a collection with the same name as the subdirectory.
@@ -592,7 +682,10 @@ def upsert_dataset_directories(dataset_path: str, db_path: str, model_name: str 
         for subdir in subdirectories:
             subdir_path = os.path.join(dataset_path, subdir)
             print(f"\nProcessing directory: {subdir_path} as collection: {subdir}")
-            process_directory_to_collection(subdir_path, subdir, client, llama_cpp_ef)
+            process_directory_to_collection(subdir_path, subdir, client, llama_cpp_ef,
+                                            batch_size=batch_size,
+                                            skip_artifacts=skip_artifacts,
+                                            incremental=incremental)
             
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -605,7 +698,13 @@ if __name__ == "__main__":
     parser.add_argument('--db', type=str, default="./chroma", help='Path to the ChromaDB persistence directory')
     parser.add_argument('--model', type=str, default="embedding-model", help='Name of the embedding model')
     parser.add_argument('--api-url', type=str, default="http://localhost:8082", help='URL of the llama.cpp API server')
-    
+    parser.add_argument('--batch-size', type=int, default=100,
+                        help='Chunks per embedding request (default 100; the old value of 10 was ~2.8x slower)')
+    parser.add_argument('--no-skip-artifacts', action='store_true',
+                        help='Also index vendored build artifacts (minified bundles, icon manifests, stemmers)')
+    parser.add_argument('--full', action='store_true',
+                        help='Disable the incremental check and re-embed every chunk')
+
     args = parser.parse_args()
     
     # Specify the path to the dataset directory
@@ -614,4 +713,7 @@ if __name__ == "__main__":
     # Specify the path where you want to store the ChromaDB files
     db_persistence_path = args.db
     
-    upsert_dataset_directories(dataset_path, db_persistence_path, model_name=args.model, api_url=args.api_url)
+    upsert_dataset_directories(dataset_path, db_persistence_path, model_name=args.model, api_url=args.api_url,
+                               batch_size=args.batch_size,
+                               skip_artifacts=not args.no_skip_artifacts,
+                               incremental=not args.full)
