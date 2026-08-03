@@ -1,0 +1,227 @@
+#include <sycl/sycl.hpp>
+#include <vector>
+#include <iostream>
+#include <memory>
+#include <atomic>
+#include <thread>
+#include <signal.h>
+#include <chrono>
+#include <string>
+
+// Define a modifiable voxel data type
+struct Voxel {
+    float density;
+    float velocity[3];
+    uint8_t material_type;
+};
+
+// Global atomic flag to control the stress test loop
+std::atomic<bool> keep_running(true);
+
+// Signal handler to gracefully exit
+void signal_handler(int signal) {
+    std::cout << "Received signal " << signal << ", stopping stress test..." << std::endl;
+    keep_running = false;
+}
+
+// Initialize voxels using buffer accessor
+void initVoxelsBuffer(sycl::queue& q, sycl::buffer<Voxel, 1>& buffer, size_t array_size) {
+    q.submit([&](sycl::handler& h) {
+        auto acc = buffer.get_access<sycl::access::mode::write>(h);
+        h.parallel_for(sycl::range<1>(array_size), [=](sycl::id<1> idx) {
+            size_t i = idx[0];
+            acc[i].density = static_cast<float>(i) / array_size;
+            acc[i].velocity[0] = 0.1f * (i % 10);
+            acc[i].velocity[1] = 0.2f * (i % 5);
+            acc[i].velocity[2] = 0.3f * (i % 3);
+            acc[i].material_type = static_cast<uint8_t>(i % 256);
+        });
+    }).wait();
+}
+
+// Process voxels using buffer accessor - more intensive version
+void processVoxelsBufferIntensive(sycl::queue& q, sycl::buffer<Voxel, 1>& buffer, size_t array_size, int iteration) {
+    q.submit([&](sycl::handler& h) {
+        auto acc = buffer.get_access<sycl::access::mode::read_write>(h);
+        h.parallel_for(sycl::range<1>(array_size), [=](sycl::id<1> idx) {
+            size_t i = idx[0];
+            
+            // More intensive computation with multiple iterations
+            for (int j = 0; j < 10; j++) {
+                float velocity_magnitude = 
+                    acc[i].velocity[0] * acc[i].velocity[0] +
+                    acc[i].velocity[1] * acc[i].velocity[1] +
+                    acc[i].velocity[2] * acc[i].velocity[2];
+                
+                // More complex transformations
+                acc[i].density = sycl::sin(acc[i].density + 0.1f * velocity_magnitude + 0.01f * iteration);
+                
+                // Additional math operations to increase workload
+                acc[i].velocity[0] = sycl::cos(acc[i].velocity[0] + 0.01f * iteration);
+                acc[i].velocity[1] = sycl::sin(acc[i].velocity[1] + 0.02f * iteration);
+                acc[i].velocity[2] = sycl::cos(acc[i].velocity[2] + 0.03f * iteration);
+                
+                // More complex material type logic
+                float temp = acc[i].density * 100.0f;
+                acc[i].material_type = static_cast<uint8_t>((static_cast<int>(temp) + iteration) % 256);
+            }
+        });
+    }).wait();
+}
+
+// Device stress test function
+void deviceStressTest(sycl::queue& q, size_t device_id, size_t array_size, bool is_cpu) {
+    const std::string device_name = q.get_device().get_info<sycl::info::device::name>();
+    const std::string device_type = is_cpu ? "CPU" : "GPU";
+    
+    std::cout << "Starting stress test on " << device_type << " device " << device_id << ": " << device_name << std::endl;
+    std::cout << "Global memory: " << q.get_device().get_info<sycl::info::device::global_mem_size>() / (1024 * 1024 * 1024) << " GB" << std::endl;
+    
+    try {
+        // Create buffer
+        sycl::buffer<Voxel, 1> buffer(array_size);
+        
+        // Initialize data once
+        initVoxelsBuffer(q, buffer, array_size);
+        
+        int iteration = 0;
+        auto start_time = std::chrono::high_resolution_clock::now();
+        size_t total_operations = 0;
+        
+        while (keep_running) {
+            // Process data intensively
+            processVoxelsBufferIntensive(q, buffer, array_size, iteration);
+            
+            iteration++;
+            total_operations += array_size * 10; // 10 operations per voxel
+            
+            // Print progress - more frequent for CPU
+            int progress_interval = is_cpu ? 10 : 100;
+            if (iteration % progress_interval == 0) {
+                auto current_time = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
+                
+                if (duration > 0) {
+                    double ops_per_second = total_operations / duration;
+                    std::cout << device_type << " Device " << device_id << " (" << device_name 
+                              << "): " << iteration << " iterations, " 
+                              << ops_per_second / 1e9 << " Gops/s" << std::endl;
+                }
+            }
+        }
+        
+        std::cout << "Stopped stress test on " << device_type << " device " << device_id << std::endl;
+        
+    } catch (const sycl::exception& e) {
+        std::cerr << "SYCL exception on " << device_type << " device " << device_id << ": " << e.what() << std::endl;
+    }
+}
+
+int main(int argc, char* argv[]) {
+    const size_t ARRAY_SIZE = 10000000; // 10 million voxels
+    std::vector<sycl::queue> device_queues;
+    std::vector<std::thread> threads;
+    bool use_cpu_only = false;
+
+    // Check for CPU-only mode flag
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--cpu" || std::string(argv[i]) == "--omp") {
+            use_cpu_only = true;
+            break;
+        }
+    }
+
+    // Set up signal handlers
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
+    
+    std::cout << "SYCL Stress Test - Press Ctrl+C to stop" << std::endl;
+    std::cout << "Array size: " << ARRAY_SIZE << " voxels" << std::endl;
+    std::cout << "Memory required: ~" << (ARRAY_SIZE * sizeof(Voxel)) / (1024 * 1024 * 1024) << " GB" << std::endl;
+    std::cout << "Mode: " << (use_cpu_only ? "CPU-only" : "GPU-preferred") << std::endl;
+
+    try {
+        if (use_cpu_only) {
+            // CPU-only mode: only look for CPU devices
+            std::cout << "CPU-only mode: Looking for CPU devices..." << std::endl;
+            auto cpu_devices = sycl::device::get_devices(sycl::info::device_type::cpu);
+            std::cout << "Found " << cpu_devices.size() << " CPU device(s)" << std::endl;
+            
+            for (auto& dev : cpu_devices) {
+                try {
+                    sycl::queue q(dev);
+                    device_queues.push_back(q);
+                    std::cout << "CPU Device: " << dev.get_info<sycl::info::device::name>() << std::endl;
+                } catch (const sycl::exception& e) {
+                    std::cerr << "Failed to create queue for CPU device: " << e.what() << std::endl;
+                }
+            }
+        } else {
+            // GPU-preferred mode: try GPUs first, fall back to CPUs
+            std::cout << "GPU-preferred mode: Looking for GPU devices..." << std::endl;
+            auto gpu_devices = sycl::device::get_devices(sycl::info::device_type::gpu);
+            std::cout << "Found " << gpu_devices.size() << " GPU device(s)" << std::endl;
+            
+            for (auto& dev : gpu_devices) {
+                try {
+                    sycl::queue q(dev);
+                    device_queues.push_back(q);
+                    std::cout << "GPU Device: " << dev.get_info<sycl::info::device::name>() << std::endl;
+                } catch (const sycl::exception& e) {
+                    std::cerr << "Failed to create queue for GPU device: " << e.what() << std::endl;
+                }
+            }
+            
+            // If no GPUs found, fall back to CPUs
+            if (device_queues.empty()) {
+                std::cout << "No GPUs found, falling back to CPU devices..." << std::endl;
+                auto cpu_devices = sycl::device::get_devices(sycl::info::device_type::cpu);
+                std::cout << "Found " << cpu_devices.size() << " CPU device(s)" << std::endl;
+                
+                for (auto& dev : cpu_devices) {
+                    try {
+                        sycl::queue q(dev);
+                        device_queues.push_back(q);
+                        std::cout << "CPU Device: " << dev.get_info<sycl::info::device::name>() << std::endl;
+                    } catch (const sycl::exception& e) {
+                        std::cerr << "Failed to create queue for CPU device: " << e.what() << std::endl;
+                    }
+                }
+            }
+        }
+        
+        // If still no devices, use default
+        if (device_queues.empty()) {
+            std::cout << "No specific devices found, using default device..." << std::endl;
+            try {
+                device_queues.emplace_back(sycl::queue());
+                std::cout << "Using default device: " 
+                          << device_queues.back().get_device().get_info<sycl::info::device::name>() << std::endl;
+            } catch (const sycl::exception& e) {
+                std::cerr << "Failed to create default queue: " << e.what() << std::endl;
+                return 1;
+            }
+        }
+        
+    } catch (const sycl::exception& e) {
+        std::cerr << "SYCL exception while getting devices: " << e.what() << std::endl;
+        return 1;
+    }
+
+    std::cout << "Using " << device_queues.size() << " device(s) for stress testing" << std::endl;
+    std::cout << "Starting stress test..." << std::endl;
+
+    // Launch a thread for each device
+    for (size_t i = 0; i < device_queues.size(); ++i) {
+        bool is_cpu = device_queues[i].get_device().is_cpu();
+        threads.emplace_back(deviceStressTest, std::ref(device_queues[i]), i, ARRAY_SIZE, is_cpu);
+    }
+
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+    std::cout << "Stress test completed!" << std::endl;
+    return 0;
+}

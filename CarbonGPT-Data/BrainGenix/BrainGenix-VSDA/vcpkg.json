@@ -1,0 +1,16 @@
+{
+  "name": "braingenix-vsda",
+  "version-string": "0.0.1",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": [
+    "bg-common-logger",
+    "yaml-cpp",
+    "rpclib",
+    "nlohmann-json",
+    "cppzmq",
+    {
+      "name": "aws-sdk-cpp",
+      "features": ["s3"]
+    }
+  ]
+}

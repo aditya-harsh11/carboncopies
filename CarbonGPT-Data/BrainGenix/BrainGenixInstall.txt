@@ -1,0 +1,107 @@
+-Cd What is the Braingenix Platform?
+The Virtual Brain Platform is a front-end to the BrainGenix API-driven NES and EVM services. It aims to provide a Python-based interface with which researchers can build multi-scale models and evaluate results relatively easily. For example, the BrainEmulationChallenge uses this interface to generate virtual data sets and assess proposed emulations. 
+(Estimated time 1-2 hours)
+Step 0: Navigate to any documentation on basic setups and how to tune system parameters (recommended locations, also check Common Issues at the bottom):
+Hardware and OS requirements:
+https://braingenix.org/GettingStarted/Requirements/#recommended-hardware
+Recommended 
+Ubuntu 24.04 LTS
+Documentation
+https://gitlab.braingenix.org/carboncopies/BrainGenix-API
+Read the /Docs folder for API definitions
+https://gitlab.braingenix.org/carboncopies/BrainGenix-API/-/tree/master/Docs?ref_type=heads
+Read over some of our latest commit history
+https://gitlab.braingenix.org/carboncopies/BrainGenix-API/-/commits/master/?ref_type=HEADS
+Step 1: Clone all three repos (recommend creating BrainGenix directory):
+mkdir BrainGenix
+cd BrainGenix
+
+git clone https://gitlab.braingenix.org/carboncopies/BrainGenix-API.git
+
+git clone https://gitlab.braingenix.org/carboncopies/BrainGenix-NES.git
+
+git clone https://gitlab.braingenix.org/carboncopies/virtual-brain/BrainEmulationChallenge.git
+Step 2: For each of the three repos, run ./Setup.sh script located in ./Tools directory
+./Setup.sh for BrainEmulationChallenge repo:
+(Note we still have issue here with a python venv, remove note when fixed. Please install apt install python3.12-venv as needed)
+cd ~/BrainGenix/BrainEmulationChallenge/Tools && ./Setup.sh
+./Setup.sh BrainGenix-NES repo:
+cd ~/BrainGenix/BrainGenix-NES/Tools && ./Setup.sh
+./Setup.sh for BrainGenix-API repo:
+cd ~/BrainGenix/BrainGenix-API/Tools && ./Setup.sh
+Step 3: For two of the repos, run ./Build.sh script located in respective ./Tools directory. If your build fails with a no such file or directory error, make sure to ./Clean.sh then rebuild. If still fails, remove and re-clone the repo, and follow previous steps. Check connections issues between the servers.
+NOTE: Use “./Build.sh 60 Release” in BrainGenix-NES repo where 20 60 (or so) is number of cores in your CPU:
+
+cd ~/BrainGenix/BrainGenix-NES/Tools && ./Build.sh 60 Release
+
+./Build.sh for BrainGenix-API repo:
+
+cd ~/BrainGenix/BrainGenix-API/Tools && ./Build.sh 60 Release
+
+
+
+Warning: Using too many threads to build the program at once can make your machine run out of memory. We advise setting this to the same number of CPU cores as your machine has, or if unknown, using 6 as a safe default assumption.
+
+
+Step 4: Use ./Run.sh on all three systems. Use BrainEmulationChallenge small model sample to see if system is functional
+
+
+# this is for NES repo 
+cd ~/BrainGenix/BrainGenix-NES/Tools && ./Run.sh
+
+# this is forAPI repo
+cd ~/BrainGenix/BrainGenix-API/Tools && ./Run.sh
+
+# this is for Brainemulation repo
+cd ~/BrainGenix/BrainEmulationChallenge/src/models/xor_scnm && ./Run.sh
+Step 5: Successful model run and tuning parameters to your needs
+
+*Model works best on Firefox, will not run on other browsers 
+Use:
+
+./Run.sh -R -n -S -M 
+
+This will run not just the model generation and data collection but also conversion to Neuroglancer, and will provide a URL for viewing that data in your browser.
+
+
+
+
+
+
+
+
+Step 6: View resulting model
+
+Common Issues and Solutions for BrainGenix-NES Emulation & BrainEmulationChallenge
+Problem: Difficulty Identifying Running NES Emulators
+
+Description: When multiple NES emulator instances might be running (e.g., after losing a session), it's hard to tell which ones are active using ps -ax.
+Solution: Use ps aux | grep [emulator_name] to filter processes. For example, ps aux | grep [n]es-emulator. You can also grep for specific ROM names if they are part of the command line.
+
+Problem: NES Emulator Sessions Lost / How to Check if Stopped
+
+Description: An NES emulator might stop if your terminal session (e.g., SSH) disconnects, and you need to know if it's still running or if it has terminated.
+Solutions:
+Prevent Session Loss: Use nohup (nohup ./your_emulator &) or terminal multiplexers like screen or tmux to keep processes running even if you disconnect.
+Check Status: Use ps aux | grep [emulator_name] (if a PID appears, it's running) or pgrep emulator_name. You can also use watch "ps aux | grep [emulator_name]" to monitor its status in real-time.
+Post-Mortem: Check any emulator log files or system logs for crash details if it stopped unexpectedly.
+
+Problem: BrainEmulationChallenge Setup Requires python3.12-venv
+
+Description: The ./Setup.sh script for the BrainEmulationChallenge repository indicates that python3.12-venv is a required package for pip install commands.
+Solution: Install the Python 3.12 virtual environment package using your system's package manager:
+
+sudo apt update
+sudo apt install python3.12-venv
+
+After installation, re-run repeat previous steps
+
+Problem: BrainEmulationChallenge Not Running Correctly
+
+Description: The BrainEmulationChallenge application is not functioning as expected.
+Solution (Troubleshooting Steps):
+Check for specific error messages: Look for any output on the console or in log files that indicates why it's not running correctly. This is the most crucial step.
+Verify Python Dependencies: Ensure python3.12-venv is installed (as above) and that all Python packages listed in requirements.txt (or similar) are successfully installed within the project's virtual environment.
+Consult Project Documentation: Refer to the BrainEmulationChallenge repository's documentation for specific setup, dependencies, or common issues.
+Resource Check: Monitor CPU and RAM usage with htop or top to see if resource limitations are causing issues.
+

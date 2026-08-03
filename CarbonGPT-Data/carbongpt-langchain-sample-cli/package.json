@@ -1,0 +1,22 @@
+{
+  "name": "carbongpt-langchain",
+  "version": "1.0.0",
+  "description": "LangChain.js port of the CarbonGPT Flowise chatflow",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/cli.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/community": "^0.3.28",
+    "@langchain/core": "^0.3.69",
+    "@langchain/openai": "^0.3.16",
+    "chromadb": "^1.9.2",
+    "langchain": "^0.3.12"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.5.0"
+  }
+}

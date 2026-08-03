@@ -1,0 +1,10 @@
+*venv*/
+.venv/
+venv/
+.env
+Dataset/
+chroma/
+py/
+__pycache__
+benchmark/benchmark_results.csv
+benchmark/benchmark_summary.txt
